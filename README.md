@@ -1,1 +1,1 @@
-# strokes
+https://jayruin.github.io/strokes/
