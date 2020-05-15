@@ -27,3 +27,5 @@ function download(filename, text) {
 
 	document.body.removeChild(a);
 }
+
+var shouldDownload = document.getElementById("should-download");

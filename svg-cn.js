@@ -43,7 +43,9 @@ async function cnRenderFanningStrokes(character, target) {
 		span.style = "display: inline-block; width: 100px; height: 100px; border: 1px solid rgb(0, 0, 0); margin-right: 1em;";
 		span.appendChild(svg);
 		target.appendChild(span);
-		download(`${character}-${(i + 1).toString().padStart(digits, "0")}.svg`, svg.outerHTML)
+		if (shouldDownload.checked) {
+            download(`${character}-cn-${(i + 1).toString().padStart(digits, "0")}.svg`, svg.outerHTML);
+        }
 	}
 }
 
