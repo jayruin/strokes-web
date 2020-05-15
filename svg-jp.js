@@ -1,38 +1,38 @@
 class KanjiSVG {
     static loadCharacterData(character) {
         var rootURL = "https://raw.githubusercontent.com/KanjiVG/kanjivg/master/kanji";
-        return fetch(`${rootURL}/${character.codePointAt(0).toString(16).padStart(5, "0")}.svg`, {method: "GET"})
-        .then(response => response.blob())
-        .then(blob => blob.text())
-        .then(text => new DOMParser().parseFromString(text, "image/svg+xml"))
-        .then(doc => {
-            var viewBox = doc.querySelector("svg").getAttribute("viewBox");
-            var strokes = [];
-            Array.from(doc.querySelectorAll("path")).sort(function (a, b) {
-                var aID = a.getAttribute("id");
-                var bID = b.getAttribute("id");
-                if (aID < bID) {
-                    return -1;
-                }
-                if (aID > bID) {
-                    return 1;
-                }
-                return 0;
-            }).forEach(element => strokes.push(element.getAttribute("d")));
-            return {viewBox: viewBox, strokes: strokes};
-        });
+        return fetch(`${rootURL}/${character.codePointAt(0).toString(16).padStart(5, "0")}.svg`, { method: "GET" })
+            .then(response => response.blob())
+            .then(blob => blob.text())
+            .then(text => new DOMParser().parseFromString(text, "image/svg+xml"))
+            .then(doc => {
+                var viewBox = doc.querySelector("svg").getAttribute("viewBox");
+                var strokes = [];
+                Array.from(doc.querySelectorAll("path")).sort(function (a, b) {
+                    var aID = a.getAttribute("id");
+                    var bID = b.getAttribute("id");
+                    if (aID < bID) {
+                        return -1;
+                    }
+                    if (aID > bID) {
+                        return 1;
+                    }
+                    return 0;
+                }).forEach(element => strokes.push(element.getAttribute("d")));
+                return { viewBox: viewBox, strokes: strokes };
+            });
     }
 }
 
 async function jpCreateSVGs(character) {
     svgs = []
     await KanjiSVG.loadCharacterData(character)
-    .then(function(charData) {
-        for (var i = 0; i < charData.strokes.length; i++) {
-            var strokesPortion = charData.strokes.slice(0, i + 1);
-            svgs.push(jpCreateSVG(charData.viewBox, strokesPortion));
-        }
-    });
+        .then(function (charData) {
+            for (var i = 0; i < charData.strokes.length; i++) {
+                var strokesPortion = charData.strokes.slice(0, i + 1);
+                svgs.push(jpCreateSVG(charData.viewBox, strokesPortion));
+            }
+        });
     return svgs;
 }
 
@@ -49,7 +49,7 @@ function jpCreateSVG(viewBox, strokes) {
     group.style = "fill:none;stroke:#000000;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;";
     svg.appendChild(group);
 
-    strokes.forEach(function(strokePath) {
+    strokes.forEach(function (strokePath) {
         var path = document.createElementNS("http://www.w3.org/2000/svg", "path");
         path.setAttributeNS(null, "d", strokePath);
         group.appendChild(path);
@@ -73,7 +73,7 @@ async function jpRenderFanningStrokes(character, target) {
     }
 }
 
-document.getElementById("generate-button-jp").addEventListener("click", function() {
+document.getElementById("generate-button-jp").addEventListener("click", function () {
     var character = document.getElementById("character-input").value;
     var target = document.getElementById("target-jp");
     clearNode(target);
