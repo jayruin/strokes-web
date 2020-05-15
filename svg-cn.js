@@ -4,22 +4,23 @@ async function cnCreateSVGs(character) {
 	.then(function(charData) {
 		for (var i = 0; i < charData.strokes.length; i++) {
 			var strokesPortion = charData.strokes.slice(0, i + 1);
-			svgs.push(cnCreateSVG(strokesPortion));
+			svgs.push(cnCreateSVG("0 0 1024 1024", strokesPortion));
 		}
 	});
 	return svgs;
 }
 
-function cnCreateSVG(strokes) {
+function cnCreateSVG(viewBox, strokes) {
 	var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
 	svg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
-	svg.setAttributeNS(null, "viewBox", "0 0 1024 1024");
+	svg.setAttributeNS(null, "viewBox", viewBox);
 	
-	svg.appendChild(createLine(512, 0, 512, 1024, "#DDD"));
-	svg.appendChild(createLine(0, 512, 1024, 512, "#DDD"));
+	var [minx, miny, width, height] = viewBox.split(" ").map(value => parseInt(value));
+	svg.appendChild(createLine(width / 2, 0, width / 2, height, "#DDD"));
+	svg.appendChild(createLine(0, height / 2, width, height / 2, "#DDD"));
 	
-	var group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-	var transformData = HanziWriter.getScalingTransform(1024, 1024);
+	var group = document.createElementNS("http://www.w3.org/2000/svg", "g");
+	var transformData = HanziWriter.getScalingTransform(width, height);
 	group.setAttributeNS(null, "transform", transformData.transform);
 	svg.appendChild(group);
 
@@ -35,8 +36,6 @@ function cnCreateSVG(strokes) {
 
 async function cnRenderFanningStrokes(character, target) {
 	var svgs = await cnCreateSVGs(character);
-	console.log(svgs);
-	console.log(target);
 	var digits = Math.ceil(Math.log10(svgs.length));
 	for (var i = 0; i < svgs.length; i++) {
 		var svg = svgs[i];
@@ -49,8 +48,8 @@ async function cnRenderFanningStrokes(character, target) {
 }
 
 document.getElementById("generate-button-cn").addEventListener("click", function() {
+	var character = document.getElementById("character-input").value;
 	var target = document.getElementById("target-cn");
-	console.log(target);
 	clearNode(target);
-	cnRenderFanningStrokes(document.getElementById("character-input").value, target);
+	cnRenderFanningStrokes(character, target);
 });
