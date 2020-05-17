@@ -60,7 +60,7 @@ function jpCreateSVG(viewBox, strokes) {
 
 async function jpRenderFanningStrokes(character, target) {
     var svgs = await jpCreateSVGs(character);
-    var digits = Math.ceil(Math.log10(svgs.length));
+    var digits = Math.floor(Math.log10(svgs.length)) + 1;
     for (var i = 0; i < svgs.length; i++) {
         var svg = svgs[i];
         var span = document.createElement("span");
