@@ -8,16 +8,9 @@ class KanjiSVG {
             .then(doc => {
                 var viewBox = doc.querySelector("svg").getAttribute("viewBox");
                 var strokes = [];
-                Array.from(doc.querySelectorAll("path")).sort(function (a, b) {
-                    var aID = a.getAttribute("id");
-                    var bID = b.getAttribute("id");
-                    if (aID < bID) {
-                        return -1;
-                    }
-                    if (aID > bID) {
-                        return 1;
-                    }
-                    return 0;
+                Array.from(doc.querySelectorAll("path")).sort(function (firstEl, secondEl) {
+                    var [firstNum, secondNum] = [firstEl, secondEl].map(el => parseInt(el.getAttribute("id").substring(el.getAttribute("id").indexOf("-s"))));
+                    return firstNum - secondNum;
                 }).forEach(element => strokes.push(element.getAttribute("d")));
                 return { viewBox: viewBox, strokes: strokes };
             });
