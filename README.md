@@ -1,1 +1,1 @@
-https://jayruin.github.io/strokes/
+https://jayruin.github.io/strokes-web/
